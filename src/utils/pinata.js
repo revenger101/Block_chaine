@@ -1,9 +1,20 @@
 import axios from "axios";
 
-const PINATA_API_KEY = "f96c5112023d9ffab556";
-const PINATA_SECRET  = "3dcf1a22124356903c3af1471f22ce01a7ee4ee9f889aedf47ef1250e776b208";
+const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
+const PINATA_SECRET  = process.env.REACT_APP_PINATA_SECRET;
+
+if (!PINATA_API_KEY || !PINATA_SECRET) {
+  console.warn(
+    "⚠️  Pinata credentials missing. " +
+    "Copy .env.example to .env and fill in REACT_APP_PINATA_API_KEY / REACT_APP_PINATA_SECRET."
+  );
+}
 
 export const uploadMetadataToIPFS = async (metadata) => {
+  if (!PINATA_API_KEY || !PINATA_SECRET) {
+    throw new Error("Pinata credentials not configured. Check your .env file.");
+  }
+
   try {
     const response = await axios.post(
       "https://api.pinata.cloud/pinning/pinJSONToIPFS",
